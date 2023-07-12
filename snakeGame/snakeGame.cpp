@@ -5,7 +5,7 @@
 int main() {
 	int delay = 0;
 	
-	Board board(30, 30);
+	Board board(10, 10);
 	Fps fps;
 
 	Player player(&board);
@@ -22,12 +22,12 @@ int main() {
 
 		player.move();
 
-		board.addToMatrix(player.x, player.y, 1);
-		
+		board.addToBoard(player.x, player.y, 43);
+		std::cout << player.x << " " << player.y;
 
 
 		board.print();
-		board.cleanMatrix();
+		board.cleanBoard();
 
 		fps.counter();
 

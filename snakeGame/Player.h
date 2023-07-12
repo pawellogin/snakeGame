@@ -3,7 +3,6 @@
 #include "Board.h"
 
 
-
 class Player {
 public:
 	Board* board;
@@ -45,12 +44,10 @@ public:
 
 		if (isLeftArrowPressed) {
 			direction = 2;
-
 		}
 
 		if (isRightArrowPressed) {
-			direction = 3;
-
+			direction = 3; 
 		}
 
 		switch (direction)
@@ -72,7 +69,7 @@ public:
 		case 2:
 			x--;
 			if (x < 0) {
-				x = board->width-1;
+				x = board->width-2;
 			}
 			break;
 
