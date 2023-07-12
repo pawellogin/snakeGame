@@ -15,46 +15,48 @@ int main() {
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	while (1) {
+		
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count();
+		if (deltaTime > 100) {
+			player.move();
 
-		player.move();
+			board.addToBoard(player.getX(), player.getY(), 43);
+			board.addTailToBoard(player.getTail());
 
-		board.addToBoard(player.getX(), player.getY(), 43);
-		board.addTailToBoard(player.getTail());
+			if (player.getX() == fruit->getX() && player.getY() == fruit->getY()) {
+				points += fruit->getPoint();
+				player.growTail();
 
-		if (player.getX() == fruit->getX() && player.getY() == fruit->getY()) {
-			points += fruit->getPoint();
-			player.growTail();
+				do {
+					delete fruit;
+					fruit = new Fruit(&board);
+				} while (board.display->buffer[fruit->getY()][fruit->getX() * 2] != 0);
+			}
 
-			do {
-				delete fruit;
-				fruit = new Fruit(&board);
-			} while (board.display->buffer[fruit->getY()][fruit->getX() * 2] != 0);
+			if (board.display->buffer[fruit->getY()][fruit->getX() * 2] != 0) {
+				exit(4);
+			}
+
+			board.addToBoard(fruit->getX(), fruit->getY(), fruit->getColor());
+
+			std::cout << "\033[40m" << "Points : " << points << "\n";
+
+			board.print();
+			board.cleanBoard();
 		}
-
-		if (board.display->buffer[fruit->getY()][fruit->getX() * 2] != 0) {
-			exit(4);
-		}
-
-		board.addToBoard(fruit->getX(), fruit->getY(), fruit->getColor());
-
-		std::cout << "\033[40m" << "Points : " << points << "\n";
-
-		board.print();
-		board.cleanBoard();
-
+		
+			if (deltaTime < 120) {
+				delay++;
+				std::chrono::milliseconds duration(delay);
+				std::this_thread::sleep_for(duration);
+			}
+			else {
+				std::chrono::milliseconds duration(delay);
+				std::this_thread::sleep_for(duration);
+			}
+		
 		fps.counter();
-
-		if (deltaTime < 120) {
-			delay++;
-			std::chrono::milliseconds duration(delay);
-			std::this_thread::sleep_for(duration);
-		}
-		else {
-			std::chrono::milliseconds duration(delay);
-			std::this_thread::sleep_for(duration);
-		}
 		startTime = currentTime;
 	}
 
