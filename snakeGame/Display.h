@@ -53,26 +53,48 @@ public:
         screen.clear();
 
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width * 2; x++) {
-                int color = buffer[y][x];
-                //SetConsoleTextAttribute(hConsole, color);
-                screen += "\033[" + std::to_string(color) + "m";
-                screen += " ";
+            if (y == 0) {
+                for (int k = 0; k < width+2; k++) {
+                    screen += "\033[44m";
+                    screen += "  ";
+                }
+                screen += "\n";
+                screen += "\033[44m";
+                screen += "  ";
             }
+            else {
+                screen += "\033[44m";
+                screen += "  ";
+            }
+
+            for (int x = 0; x < width * 2; x++) {
+                    int color = buffer[y][x];
+                    screen += "\033[" + std::to_string(color) + "m";
+                    screen += " ";
+            }
+            
+            screen += "\033[44m";
+            screen += "  ";
             screen += "\n";
+
+            if (y == height - 1) {
+                for (int k = 0; k < width + 2; k++) {
+                    screen += "\033[44m";
+                    screen += "  ";
+                }
+                screen += "\n";
+            }
         }
         std::cout << screen;
     }
 
 private:
     void InitializeConsole() {
-        // Set console mode to enable virtual terminal processing
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD consoleMode;
         GetConsoleMode(hConsole, &consoleMode);
         SetConsoleMode(hConsole, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 
-        // Hide the cursor
         CONSOLE_CURSOR_INFO cursorInfo;
         GetConsoleCursorInfo(hConsole, &cursorInfo);
         cursorInfo.bVisible = FALSE;
@@ -80,7 +102,6 @@ private:
     }
 
     void ResetConsole() {
-        // Restore console mode and show the cursor
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD consoleMode;
         GetConsoleMode(hConsole, &consoleMode);

@@ -1,27 +1,59 @@
 #pragma once
 #include <Windows.h>
-#include "Board.h"
 
+class Board;
 
 class Player {
-public:
+	bool containsValues( int targetX, int targetY) {
+		for (const Coord& coord : tail) {
+			if (coord.x == targetX && coord.y == targetY) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	std::vector<Coord> tail;
 	Board* board;
 	int direction;
-	int lenght;
+	int startLenght;
 	int x;
 	int y;
-
 public:
+
+	int getX() {
+		return x;
+	}
+
+	int getY() {
+		return y;
+	}
+
+	std::vector<Coord> getTail() {
+		return tail;
+	}
+
 	Player(Board *b){
 		board = b;
 		x = 0;
 		y = 0;
-		lenght = 1;
+		startLenght = 3;
 		direction = 3;
+
+		for (int i = 0; i < startLenght; i++) {
+			tail.push_back(*new Coord);
+		}
 	}
 
 	void move() {
+		for (int i = tail.size() - 1; i > 0; i--) {
+			tail[i].x = tail[i - 1].x;
+			tail[i].y = tail[i - 1].y;
+		}
 
+		tail[0].x = x;
+		tail[0].y = y;
+ 
 		/*
 		0 up
 		1 down
@@ -34,19 +66,19 @@ public:
 		bool isLeftArrowPressed = GetAsyncKeyState(37) & 0x8000;
 		bool isRightArrowPressed = GetAsyncKeyState(39) & 0x8000;
 
-		if (isDownArrowPressed) {
+		if (isDownArrowPressed && direction !=0) {
 			direction = 1;
 		}
 
-		if (isUpArrowPressed) {
+		if (isUpArrowPressed && direction !=1) {
 			direction = 0;
 		}
 
-		if (isLeftArrowPressed) {
+		if (isLeftArrowPressed && direction !=3) {
 			direction = 2;
 		}
 
-		if (isRightArrowPressed) {
+		if (isRightArrowPressed && direction != 2) {
 			direction = 3; 
 		}
 
@@ -83,6 +115,13 @@ public:
 		default:
 			break;
 		}
+
+		if (containsValues(x, y)) {
+			exit(2);
+		}
 	}
 
+	void growTail() {
+		tail.push_back(*new Coord(this->x,this->y));
+	}
 };

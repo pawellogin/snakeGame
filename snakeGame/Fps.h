@@ -6,12 +6,10 @@
 #include <thread>
 
 class Fps {
-
     int frameCount;
     double fps;
     int delay = 0;
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
-
 
     void SetConsoleWindowTitle(const std::string& title) {
         int len = MultiByteToWideChar(CP_UTF8, 0, title.c_str(), -1, NULL, 0);
@@ -29,7 +27,6 @@ public:
         startTime = std::chrono::high_resolution_clock::now();
     }
 
-
     void counter() {
         frameCount++;
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -40,28 +37,9 @@ public:
             std::string title = "FPS: " + std::to_string(fps);
             SetConsoleWindowTitle(title);
 
-            // Reset frame count and timer
             frameCount = 0;
             startTime = currentTime;
         }
     }
-
-    void fpsLimiter(int targetFps) {
-
-        
-        
-        if (fps > targetFps) {
-            delay++;
-
-            std::chrono::milliseconds duration(delay);
-            std::this_thread::sleep_for(duration);
-        }
-        else {
-            std::chrono::milliseconds duration(delay);
-            std::this_thread::sleep_for(duration);
-        }
-       
-    }
-
 };
 
