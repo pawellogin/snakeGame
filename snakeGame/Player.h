@@ -117,7 +117,7 @@ public:
 		}
 
 		if (containsValues(x, y)) {
-			exit(2);
+			exit(0);
 		}
 	}
 
